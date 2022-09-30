@@ -1,0 +1,125 @@
+html {
+  scroll-behavior: smooth;
+}
+main{
+  padding: 1rem;
+}
+.products{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.product{
+  border: 1px solid #404040;
+  margin: 1rem;
+}
+.product img{
+  width: 100%;
+}
+.product-info{
+  justify-content: center;
+}
+.a-style{
+  color: #000;
+  text-decoration: none;
+}
+.site-container{
+  min-height: 100vh;
+}
+main{
+  flex: 1;
+}
+.checked{
+  color: orange;
+}
+.img-large{
+  max-width: 100%;
+}
+.img-thumbnail{
+  height: 80px;
+}
+.checkout-steps>div{
+  border-bottom: 0.2rem solid #a0a0a0;
+  color: #a0a0a0;
+}
+.checkout-steps>div.active{
+  border-bottom: 0.2rem solid #f08000;
+  color: #f08000;
+}
+.paytm{
+  width:105px;
+}
+.modal{
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.418);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mg-top{
+  margin-top: 10px;
+}
+.white{
+  text-decoration: none;
+  color: black;
+}
+.white:hover{
+  text-decoration: none;
+  color: black;
+}
+
+
+@media (max-width:456px){
+  .check-steps{
+    font-size: 17px;
+  }
+}
+@media (max-width:344px) {
+  .check-steps{
+    font-size: 23px;
+  }
+}
+@media (max-width:772px) {
+  .scroll-down{
+    display: flex;
+    flex-direction: column-reverse;
+  }
+}
+@media (max-width:1003px){
+  .paytm {
+    width: 72px;
+}
+}
+@media (max-width:390px){
+  .order-font{
+    font-size: 18px;
+  }
+}
+@media (max-width:509px){
+  .custom-grid{
+    display: grid;
+    grid-template-columns: auto auto auto;
+  }
+}
+@media (max-width:375px){
+  .custom-grid{
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+}
+@media (max-width:334px){
+  .custom-grid{
+    display: grid;
+    grid-template-columns: auto ;
+  }
+}
+
+.footer{
+  padding:10px;
+  color: white;
+background-color: #000;
+}
