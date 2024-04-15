@@ -1,32 +1,44 @@
-import React from 'react'
+import React from "react";
 
-const Ratings = (rating) => {
+const Ratings = ({ rating }) => {
+  const filledStarClasses = "text-yellow-400";
+  const halfStarClasses = "text-yellow-400";
+  const emptyStarClasses = "text-gray-300";
+
+  const renderStars = () => {
+    const stars = [];
+
+    for (let i = 1; i <= 5; i++) {
+      if (rating >= i) {
+        stars.push(
+          <span key={i}>
+            <i className={`fas fa-star ${filledStarClasses}`} />
+          </span>
+        );
+      } else if (rating + 0.5 === i) {
+        stars.push(
+          <span key={i}>
+            <i className={`fas fa-star-half-alt ${halfStarClasses}`} />
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i}>
+            <i className={`far fa-star ${emptyStarClasses}`} />
+          </span>
+        );
+      }
+    }
+
+    return stars;
+  };
+
   return (
-    <div className='rating'>
-      <span>
-        <i
-        className={rating.rating >= 1 ? 'fa fa-star checked' : rating.rating >= 0.5 ? 'fa fa-star-half-full checked' : 'fa fa-star  checked'}
-           />
-      </span>
-      <span>
-        <i
-          className={rating.rating >= 2 ? 'fa fa-star checked' : rating.rating >= 1.5 ? 'fa fa-star-half-full checked' : 'fa fa-star checked'} />
-      </span>
-      <span>
-        <i
-          className={rating.rating >= 3 ? 'fa fa-star checked' : rating.rating >= 2.5 ? 'fa fa-star-half-full checked' : 'fa fa-star checked'} />
-      </span>
-      <span>
-        <i
-          className={rating.rating >= 4 ? 'fa fa-star checked' : rating.rating >= 3.5 ? 'fa fa-star-half-full checked' : 'fa fa-star checked'} />
-      </span>
-      <span>
-        <i
-          className={rating.rating >= 5 ? 'fa fa-star checked' : rating.rating >= 4.5 ? 'fa fa-star-half-full checked' : 'fa fa-star checked'} />
-      </span>
-      <span>  <strong>{rating.numReviews}</strong> reviews </span>
+    <div className="rating flex items-center">
+      {renderStars()}
+      <span className="ml-2 text-gray-500">{rating} reviews</span>
     </div>
-  )
-}
+  );
+};
 
-export default Ratings
+export default Ratings;

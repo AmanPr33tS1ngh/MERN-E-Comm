@@ -1,187 +1,152 @@
-import React, { useEffect } from 'react'
-import axios from 'axios'
-import CheckOutSteps from './CheckOutSteps'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Card from 'react-bootstrap/Card'
-import {  Link, useNavigate } from 'react-router-dom'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Button from 'react-bootstrap/Button'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
+import React, { useEffect } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CheckOutSteps from "./CheckOutSteps";
 
 const PlaceOrder = () => {
   const navigate = useNavigate();
 
+  // Retrieve cart items and user info from localStorage
+  const cart = JSON.parse(localStorage.getItem("cartItems"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const paymentMethod = localStorage.getItem("paymentMethod");
+  const shippingAddress = JSON.parse(localStorage.getItem("shippingAddress"));
 
-  const cart=JSON.parse(localStorage.getItem('cartItems'))
-
-    const userInfo=JSON.parse(localStorage.getItem('userInfo'))
-
-  const cartItem = localStorage.getItem("paymentMethod")
+  // Redirect to payment page if payment method is not selected
   useEffect(() => {
-    if (!cartItem) {
-      navigate("/payment")
+    if (!paymentMethod) {
+      navigate("/payment");
     }
-  }, [cart, navigate])
+  }, [paymentMethod, navigate]);
 
-  const carts = [];
-  carts.push(JSON.parse(localStorage.getItem("cartItems")))
-  let cartItems;
-  if(carts[0]!=null){
-     cartItems = carts[0].map((item) => item)
-  }
+  // Calculate prices
   let itemsPrice = 0;
   let shippingPrice = 0;
   let taxPrice = 0;
   let totalPrice = 0;
-  console.log(cartItems);
-  if (cartItems!=undefined) {
-    cartItems.map((item) => {
+
+  if (cart) {
+    cart.forEach((item) => {
       itemsPrice += item.totalPrice;
-      shippingPrice += (item.price / 3);
-      taxPrice += (item.price / 30);
-      return 0;
-    })
+      shippingPrice += item.price / 3;
+      taxPrice += item.price / 30;
+    });
   }
 
   totalPrice = itemsPrice + shippingPrice + taxPrice;
-  const paymentMethod = localStorage.getItem("paymentMethod");
 
-  const shippingAddress = JSON.parse(localStorage.getItem("shippingAddress"))
+  // Place order handler
   const placeOrderHandler = async () => {
     try {
-      const deleteCart = async () => {
-        const result = await axios.delete(`api/cart`);
-        console.log(result);
-      }
+      // Delete cart items
+      await axios.delete("api/cart");
 
-      const items = {
-        orderItems: cartItems,
-        shippingAddress: shippingAddress,
-        paymentMethod: paymentMethod,
-        itemsPrice: itemsPrice,
-        shippingPrice: shippingPrice,
-        taxPrice: taxPrice,
-        totalPrice: totalPrice,
+      // Create order object
+      const order = {
+        orderItems: cart,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
         isDelivered: false,
         isPaid: false,
         user: userInfo,
-        userId:userInfo._id
-      }
-      console.log(items);
-      const { data } = await axios.post('api/orders', items)
-      toast.success('Order Placed')
-      deleteCart();
-      localStorage.removeItem('cartItems');
-      navigate(`/order/${data.order._id}`)
-    } catch (err) {
-      toast.error('there was some error')
+        userId: userInfo._id,
+      };
+
+      // Post order to server
+      const { data } = await axios.post("api/orders", order);
+
+      // Display success message
+      toast.success("Order Placed");
+
+      // Clear cartItems from localStorage
+      localStorage.removeItem("cartItems");
+
+      // Navigate to order page
+      navigate(`/order/${data.order._id}`);
+    } catch (error) {
+      // Display error message
+      toast.error("There was some error");
     }
-  }
+  };
 
   return (
     <div>
       <CheckOutSteps step1 step2 step3 step4 />
-      <title>Preview Order</title>
+      <h1 className="text-3xl font-bold mb-4">Preview Order</h1>
 
-      <h1>Preview Order</h1>
+      {cart && (
+        <div className="flex flex-wrap">
+          <div className="w-full md:w-2/3 pr-4">
+            {/* Shipping Address */}
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-2">Shipping</h2>
+              <p>
+                <strong>Name:</strong> {shippingAddress.fullName} <br />
+                <strong>Address:</strong>{" "}
+                {`${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}`}
+              </p>
+              <Link className="text-blue-500 hover:underline" to="/shipping">
+                Click here to edit
+              </Link>
+            </div>
 
-      {cartItems!=null?(<Row className='scroll-down'>
-        <Col md={8}>
-          <Card className='mb-3'>
-            <Card.Body>
-              <Card.Title>Shipping</Card.Title>
-              <Card.Text>
-                <strong>Name:</strong>{shippingAddress.fullName} <br />
-                <strong>Address:</strong> {shippingAddress.address},{shippingAddress.city},{shippingAddress.postalCode},{shippingAddress.country}
+            {/* Payment Method */}
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-2">Payment Method</h2>
+              <p>{paymentMethod}</p>
+              <Link className="text-blue-500 hover:underline" to="/payment">
+                Click here to edit
+              </Link>
+            </div>
 
-              </Card.Text>
-              <Link className='white' to='/shipping'>Click to here Edit</Link>
-            </Card.Body>
-          </Card>
-          <Card className='mb-3'>
-            <Card.Body>
-              <Card.Text>
-                <strong>Method:</strong>  {paymentMethod}
-              </Card.Text>
-              <Link className='white' to="/payment">Click to here Edit</Link>
-            </Card.Body>
-          </Card>
-          <Card className='mb-3'>
-            <Card.Body>
-              <Card.Title>Items</Card.Title>
-              {cartItems ? cartItems.map((item) => (
-                <ListGroup.Item key={item._id}>
-                  <Row className='align-items-center'>
-                    <Col md={3}>
-                    <Link className='white' to={`/product/${item.slug}`}>
-                      <img src={item.image} alt={item.name} className='img-fluid rounded img-thumbail' />{' '}
-                      </Link>
-</Col>
-<Col className='mx-3'>
-<Col>
-                      <Link className='white' to={`/product/${item.slug}`}>{item.name}</Link></Col>
-                      <Col>
-                    <span>Item Quantity: {item.quantity}</span></Col>
-                    <Col>
-                    <span>Total Price: {item.totalPrice}</span></Col>
-                    </Col>
-                  </Row>
-                  <hr />
-                </ListGroup.Item>
-              )) : (
-                <div>
-
+            {/* Cart Items */}
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-2">Items</h2>
+              {cart.map((item) => (
+                <div key={item._id} className="mb-4 border-b pb-4">
+                  {/* Display cart item */}
+                  {/* Your cart item display code goes here */}
                 </div>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Order Summary</Card.Title>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Items:</Col>
-                    <Col>${itemsPrice.toFixed(2)}</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Shipping:</Col>
-                    <Col>${shippingPrice.toFixed(2)}</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col>Tax:</Col>
-                    <Col>${taxPrice.toFixed(2)}</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Col><strong>Order Total</strong></Col>
-                    <Col>${totalPrice.toFixed(2)}</Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Button type='button' onClick={placeOrderHandler}
-                    disabled={totalPrice === 0}>Place Order</Button>
-                </ListGroup.Item>
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>):(
-        <div></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Order Summary */}
+          <div className="w-full md:w-1/3">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-2">Order Summary</h2>
+              <div className="mb-2">
+                <strong>Items:</strong> ${itemsPrice.toFixed(2)}
+              </div>
+              <div className="mb-2">
+                <strong>Shipping:</strong> ${shippingPrice.toFixed(2)}
+              </div>
+              <div className="mb-2">
+                <strong>Tax:</strong> ${taxPrice.toFixed(2)}
+              </div>
+              <div className="mb-2">
+                <strong>Total:</strong> ${totalPrice.toFixed(2)}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={placeOrderHandler}
+              disabled={totalPrice === 0}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Place Order
+            </button>
+          </div>
+        </div>
       )}
-
     </div>
-  )
-}
+  );
+};
 
-export default PlaceOrder
+export default PlaceOrder;

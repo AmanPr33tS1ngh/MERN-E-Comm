@@ -1,57 +1,65 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import ListGroup from 'react-bootstrap/ListGroup'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const OrderHistory = () => {
-  const [order, setOrder] = useState([]);
-  const id = useParams().id;
+  const [orders, setOrders] = useState([]);
+  const { id } = useParams();
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    const fetchOrders = async () => {
       try {
-        const data = await axios.get(`/api/orders/user/${id}`);
-        setOrder(data.data.order);
+        const response = await axios.get(`/api/orders/user/${id}`);
+        setOrders(response.data.orders);
       } catch (err) {
         console.log(err);
       }
-
     };
-    fetchOrder();
-  }, [])
-  console.log(order);
+    fetchOrders();
+  }, [id]);
 
   return (
     <div>
-      <h1>Order History</h1>
-      {order ? order.map((order) => (
-
-        <Row>
-
-          <ListGroup>
-            {order.orderItems.map((item) => (
-              <ListGroup.Item key={item._id}>
-                <Row className='align-items-center '>
-                  <div>
-                    <Col className='my-3 custom-grid '>
-                      <Link to={`/product/${item.slug}`}>
-                        <img className='img-fluid rounded img-thumbnail mx-2' src={item.image} alt={item.name} /></Link>
-                    <span className='mx-2'>{item.name}</span>
-
-                    <span className='mx-2'>Quantity: {item.quantity}</span>
-                    <span className='mx-2'>Total Price Paid : {item.totalPrice} </span>
-                    </Col>
+      <h1 className="text-2xl font-bold mb-4">Order History</h1>
+      {orders.length > 0 ? (
+        orders.map((order) => (
+          <div key={order._id} className="mb-4">
+            <div className="border-b border-gray-200 pb-4">
+              {order.orderItems.map((item) => (
+                <div key={item._id} className="flex items-center mb-4">
+                  <div className="mr-4">
+                    <Link to={`/product/${item.slug}`}>
+                      <img
+                        className="rounded-full h-16 w-16 object-cover"
+                        src={item.image}
+                        alt={item.name}
+                      />
+                    </Link>
                   </div>
-                </Row>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Row>
-      )) : (<div>No Orders RN...  Go Shop</div>)}
+                  <div>
+                    <div>
+                      <Link
+                        to={`/product/${item.slug}`}
+                        className="text-lg font-semibold"
+                      >
+                        {item.name}
+                      </Link>
+                    </div>
+                    <div className="text-gray-500">
+                      Quantity: {item.quantity} | Total Price Paid:{" "}
+                      {item.totalPrice}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-lg">No Orders Right Now... Go Shop!</div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default OrderHistory
+export default OrderHistory;

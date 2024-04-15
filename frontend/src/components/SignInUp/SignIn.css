@@ -1,0 +1,86 @@
+.d-flex{
+    display: flex;
+    align-items: center;
+}
+.d-grid{
+    display: grid;
+    align-items: center;
+    height: 100vh;
+}
+.center{
+    justify-content: center;
+}
+.right-panel{
+    width: 60%;
+}
+.left-panel{
+    background: rgb(24, 210, 110);
+    width: 40%;
+}
+.sign-in-input{
+    width: 100%;
+    height: 40px;
+    background: #f1f1f1;
+    margin-bottom: 5px;
+    border-radius: 18px;
+    padding: 0 10px;
+    border: none;
+    margin-bottom: 18px;
+}
+.sign-in-btn{
+    width: 100%;
+    height: 40px;
+    background: rgb(24, 210, 110);
+    color: white;
+    margin-bottom: 5px;
+    border-radius: 18px;
+    border: none;
+    margin-bottom: 18px;
+    width: 60%;
+    font-weight: 600;
+}
+.sub-heading{
+    font-weight: 500;
+    font-family: sans-serif;
+    margin-bottom: 20px;
+}
+.m-auto{
+    margin: auto;
+}
+.h-100{
+    height: 100vh !important;
+}
+.se{
+    justify-content: space-evenly;
+}
+.h-50{
+    height: 50vh;
+}
+.text-align{
+    text-align: center;
+}
+::-webkit-input-placeholder {
+    text-align: center;
+    color: rgb(166, 153, 153);
+}
+
+:-ms-input-placeholder {
+    text-align: center;
+    color: rgb(166, 153, 153);
+}
+
+::placeholder {
+    text-align: center;
+    color: rgb(166, 153, 153);
+}
+.w-45{
+    width: 45%;
+}
+.heading{
+    font-weight: 600;
+    font-family: sans-serif;
+    margin-bottom: 30px;
+}
+.c-white{
+    color: white;
+}

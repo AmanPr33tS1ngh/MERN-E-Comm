@@ -1,18 +1,18 @@
-import React from 'react'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import React from "react";
 
 const CheckOutSteps = (props) => {
   return (
-    <div className='check-steps'>
-      <Row className='checkout-steps'>
-        <Col className={props.step1?'active':''}>Sign-In</Col>
-        <Col className={props.step2?'active':''}>Shipping</Col>
-        <Col className={props.step3?'active':''}>Payment</Col>
-        <Col className={props.step4?'active':''}>Place Order</Col>
-      </Row>
+    <div className="check-steps">
+      <div className="flex justify-between checkout-steps">
+        <div className={`w-1/4 ${props.step1 ? "active" : ""}`}>Sign-In</div>
+        <div className={`w-1/4 ${props.step2 ? "active" : ""}`}>Shipping</div>
+        <div className={`w-1/4 ${props.step3 ? "active" : ""}`}>Payment</div>
+        <div className={`w-1/4 ${props.step4 ? "active" : ""}`}>
+          Place Order
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default CheckOutSteps
+export default CheckOutSteps;

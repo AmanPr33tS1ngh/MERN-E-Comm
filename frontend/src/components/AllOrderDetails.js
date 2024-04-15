@@ -1,85 +1,81 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import {  useParams } from 'react-router-dom';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import ListGroup from 'react-bootstrap/ListGroup'
-import Card from 'react-bootstrap/Card'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const AllOrderDetails = () => {
-  const id = useParams().id;
-  const [order, setOrder] = useState([]);
+  const { id } = useParams();
+  const [order, setOrder] = useState(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const data = await axios.get(`/api/orders/${id}`);
-        setOrder(data.data);
+        const { data } = await axios.get(`/api/orders/${id}`);
+        setOrder(data);
       } catch (err) {
         console.log(err);
       }
-
     };
     fetchOrder();
-  }, [])
-  console.log(order);
+  }, [id]);
+
   return (
-    <div>
-      <h1>Preview</h1>
-      <ListGroup>
-        {order.shippingAddress ? (
-          <ListGroup.Item>
-            <Row>
-
-              <div>
-                <h5>Order From {order.shippingAddress.fullName}</h5>
+    <div className="container mx-auto">
+      <h1 className="text-2xl font-bold">Preview</h1>
+      {order && order.shippingAddress && (
+        <div className="my-4">
+          <h5 className="font-bold">
+            Order From {order.shippingAddress.fullName}
+          </h5>
+          <p>
+            Address: {order.shippingAddress.address},{" "}
+            {order.shippingAddress.postalCode}, {order.shippingAddress.city},{" "}
+            {order.shippingAddress.country}
+          </p>
+          <div className="mt-4">
+            <div className="bg-gray-100 p-4 rounded">
+              <div className="flex justify-between">
+                <div className="w-1/2">
+                  <p className="font-bold">
+                    Price Paid By Customer: ${order.totalPrice.toFixed(2)} (
+                    {order.paymentMethod})
+                  </p>
+                </div>
+                <div className="w-1/2 text-right">
+                  (including taxes and shipping charges)
+                </div>
               </div>
-              <h6>
-                <Col>
-                  Address:  {order.shippingAddress.address} , {order.shippingAddress.postalCode} , {order.shippingAddress.city} , {order.shippingAddress.country}
-                </Col></h6>
-
-              <Col >
-                  <Card>
-                    <Card.Body>
-                          <Row>
-                            <Col md={5}>Price Paid By Customer:  ${order.totalPrice.toFixed(2)} ({order.paymentMethod})</Col>
-                            <Col >(including taxes and shipping charges)</Col>
-                          </Row>
-                    </Card.Body>
-                  </Card>
-                </Col>
-            </Row>
-          </ListGroup.Item>
-
-        ) : (<div></div>)}
-        {order && order.orderItems ? order.orderItems.map((item) => (
-          <ListGroup.Item>
-            <Row>
-              <Col md={3}>
-                <img className='img-large' src={item.image} alt={item.name}></img>
-              </Col>
-              <Col md={3}>
-                <ListGroup variant="flush">
-
-                  <ListGroup.Item>
-                    <h1>{item.name}</h1>
-                  </ListGroup.Item>
-
-                  <ListGroup.Item>
-                    Price : ${item.totalPrice}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    Quantity :  {item.quantity}</ListGroup.Item>
-
-                </ListGroup>
-              </Col>
-            </Row>
-          </ListGroup.Item>
-        )) : (<div>loading....</div>)}
-      </ListGroup>
+            </div>
+          </div>
+        </div>
+      )}
+      <div>
+        {order && order.orderItems ? (
+          order.orderItems.map((item, index) => (
+            <div key={index} className="my-4">
+              <div className="border border-gray-300 rounded p-4">
+                <div className="flex items-center">
+                  <div className="w-1/4">
+                    <img
+                      className="img-large"
+                      src={item.image}
+                      alt={item.name}
+                    />
+                  </div>
+                  <div className="w-3/4 ml-4">
+                    <h1 className="text-xl font-bold">{item.name}</h1>
+                    <p>Price: ${item.totalPrice}</p>
+                    <p>Quantity: {item.quantity}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center my-4">Loading...</div>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default AllOrderDetails
+export default AllOrderDetails;
