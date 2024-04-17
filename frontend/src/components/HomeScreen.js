@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../Redux/Axios/axios";
 import Product from "./Product";
 import LoadingBox from "./SpinnerLoading";
 import Slider from "react-slick";

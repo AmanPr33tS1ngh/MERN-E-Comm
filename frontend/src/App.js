@@ -1,14 +1,9 @@
 import "./App.css";
-import {
-  BrowserRouter,
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import HomeScreen from "./components/HomeScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import ProductScreen from "./components/ProductScreen";
 import Cart from "./components/Cart";
 import SignIn from "./components/SignIn";
@@ -26,17 +21,18 @@ import AllOrderDetails from "./components/AllOrderDetails";
 import EditOrder from "./components/EditOrder";
 import DeleteOrder from "./components/DeleteOrder";
 import AddOrder from "./components/AddOrder";
+import { useSelector } from "react-redux";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="d-flex flex-column site-container">
+      <div>
         <ToastContainer position="bottom-center" limit={1} />
         <header>
           <Navbar />
         </header>
         <main>
-          <div className="mt-3">
+          <div>
             <Routes>
               <Route path="/" element={<HomeScreen />} exact />
               <Route path="/cart" element={<Cart />} />
@@ -59,7 +55,6 @@ function App() {
             </Routes>
           </div>
         </main>
-        <footer className="text-center footer">All rights reserved</footer>
       </div>
     </BrowserRouter>
   );
