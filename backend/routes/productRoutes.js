@@ -1,13 +1,16 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Product from "../models/productModel.js";
-import { isAuth } from "../utils.js";
+import { isAuth, isAdmin } from "../utils.js";
 
 const productRouter = express.Router();
 
 productRouter.post(
   "/",
+  isAuth,
+  isAdmin,
   expressAsyncHandler(async (req, res) => {
+    console.log("inside api");
     const newProduct = new Product({
       brand: req.body.brand,
       category: req.body.category,
@@ -20,13 +23,19 @@ productRouter.post(
       rating: req.body.rating,
       slug: req.body.slug,
     });
+    console.log("done api");
 
     const product = await newProduct.save();
-    res.status(201).send({ message: "New ORder created: ", product });
+    res.status(201).send({ message: "New Order created: ", product });
   })
 );
 
-productRouter.get("/", isAuth, async (req, res) => {
+// productRouter.get("/", isAuth, async (req, res) => {
+//   const products = await Product.find();
+//   res.send(products);
+// });
+
+productRouter.get("/", async (req, res) => {
   const products = await Product.find();
   res.send(products);
 });

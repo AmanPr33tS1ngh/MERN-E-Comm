@@ -23,10 +23,20 @@ export const isAuth = (req, res, next) => {
         res.status(401).send({ message: "Invalid token" });
       } else {
         req.user = decode;
+        console.log("decodddeee", decode);
         next();
       }
     });
   } else {
-    res.status(401).send({ message: "No token" });
+    res.send({ success: false, msg: "Invalid Token" });
+  }
+};
+
+export const isAdmin = (req, res, next) => {
+  console.log("req", req.user);
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    res.send({ success: false, msg: "Invalid Admin Token" });
   }
 };

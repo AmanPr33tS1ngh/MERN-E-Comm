@@ -10,8 +10,8 @@ const ProductScreen = () => {
   const { slug } = params;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState(null);
-
+  const [product, setProduct] = useState({});
+  console.log("product screen");
   useEffect(() => {
     const fetchData = async () => {
       try {

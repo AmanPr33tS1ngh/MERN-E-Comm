@@ -6,38 +6,38 @@ import { useNavigate } from "react-router-dom";
 
 const AddOrder = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
-  const [image, setImage] = useState("");
-  const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [countInStock, setCountInStock] = useState("");
-  const [rating, setRating] = useState("");
-  const [numReviews, setNumReviews] = useState("");
+
+  const [product, setProduct] = useState({
+    name: "",
+    slug: "",
+    image: "",
+    brand: "",
+    category: "",
+    price: "",
+    description: "",
+    countInStock: "",
+    rating: "",
+    numReviews: "",
+  });
+  const changeProduct = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
     try {
-      const data = await axios.post("/api/products", {
-        name: String(name),
-        slug: String(slug),
-        brand: String(brand),
-        image: String(image),
-        category: String(category),
-        description: String(description),
-        price: Number(price),
-        countInStock: Number(countInStock),
-        rating: Number(rating),
-        numReviews: Number(numReviews),
-      });
+      const { data } = await axios.post("/api/products", product);
+      console.log("data", data);
+      if (!data.success) {
+        toast.error(data.msg);
+        return;
+      }
       console.log(data);
       toast.success("product added");
       navigate("/admin");
     } catch (err) {
-      return toast.error("there was some error while adding product");
+      return toast.error("there was some error while adding product " + err);
     }
   };
 
@@ -49,90 +49,100 @@ const AddOrder = () => {
         <div className="mb-3">
           <label className="block">Name of product</label>
           <input
-            className="form-input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.name}
+            name="name"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Slug</label>
           <input
-            className="form-input"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.slug}
+            name="slug"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Image</label>
           <input
-            className="form-input"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.image}
+            name="image"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Brand</label>
           <input
-            className="form-input"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.brand}
+            name="brand"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Price</label>
           <input
-            className="form-input"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.price}
+            name="price"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Category</label>
           <input
-            className="form-input"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.category}
+            name="category"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Description</label>
           <input
-            className="form-input"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.description}
+            name="description"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Count In Stock</label>
           <input
-            className="form-input"
-            value={countInStock}
-            onChange={(e) => setCountInStock(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.countInStock}
+            name="countInStock"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Rating</label>
           <input
-            className="form-input"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.rating}
+            name="rating"
+            onChange={changeProduct}
             required
           />
         </div>
         <div className="mb-3">
           <label className="block">Number of Reviews</label>
           <input
-            className="form-input"
-            value={numReviews}
-            onChange={(e) => setNumReviews(e.target.value)}
+            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            value={product.numReviews}
+            name="numReviews"
+            onChange={changeProduct}
             required
           />
         </div>
